@@ -4,22 +4,14 @@ from typing import Optional
 
 
 class Show(SQLModel, table=True):
-    """TV Show model"""
+    """TV Show model with global watch status"""
 
     id: Optional[int] = Field(default=None, primary_key=True)
     title: str = Field(unique=True, index=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    watched: bool = Field(default=False)  # Global watch status
+    rating: Optional[int] = Field(default=None, ge=1, le=5)  # Global rating
+    watched_at: Optional[datetime] = Field(default=None)  # When it was watched
 
 
-class Watch(SQLModel, table=True):
-    """User watch tracking model"""
-
-    id: Optional[int] = Field(default=None, primary_key=True)
-    user: str = Field(index=True)
-    show_id: int = Field(foreign_key="show.id")
-    rating: int = Field(ge=1, le=5)  # Rating 1-5
-    watched_at: datetime = Field(default_factory=datetime.utcnow)
-
-    class Config:
-        # Ensure unique combination of user and show
-        table = True
+# Watch model removed - no longer needed for per-user tracking

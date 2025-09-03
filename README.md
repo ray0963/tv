@@ -5,7 +5,7 @@ A minimal Python backend for tracking TV shows and user watch history. Built wit
 ## Features
 
 - **Global TV Show Management**: Add, update, delete, and list TV shows
-- **User Watch Tracking**: Mark shows as watched/unwatched with ratings (1-5)
+- **Global Watch Tracking**: Mark shows as watched/unwatched with ratings (1-5) for all users
 - **JWT Authentication**: Secure API with bearer token authentication
 - **SQLite Database**: File-based database with automatic table creation
 - **CORS Support**: Ready for frontend integration
@@ -127,9 +127,9 @@ curl http://127.0.0.1:8000/users/ray/watched \
 
 ### Users (Authentication Required)
 - `GET /users/{username}/watched`
-  - **Response**: Array of `WatchResponse` objects
+  - **Response**: Array of `ShowResponse` objects (globally watched shows)
 - `GET /users/{username}/unwatched`
-  - **Response**: Array of `UnwatchedShowResponse` objects
+  - **Response**: Array of `ShowResponse` objects (globally unwatched shows)
 
 ### Response Models
 
@@ -144,21 +144,15 @@ curl http://127.0.0.1:8000/users/ray/watched \
 }
 ```
 
-**WatchResponse**:
+**ShowResponse** (includes global watch status):
 ```json
 {
   "id": 1,
   "title": "Breaking Bad",
+  "created_at": "2024-01-15T10:30:00",
+  "watched": true,
   "rating": 5,
   "watched_at": "2024-01-15T10:30:00"
-}
-```
-
-**UnwatchedShowResponse**:
-```json
-{
-  "id": 2,
-  "title": "The Wire"
 }
 ```
 
@@ -183,21 +177,15 @@ curl http://127.0.0.1:8000/users/ray/watched \
 }
 ```
 
-**Watch Object** (for watched shows):
+**Show Object** (now includes global watch status):
 ```json
 {
   "id": 1,
   "title": "Breaking Bad",
+  "created_at": "2024-01-15T10:30:00",
+  "watched": true,
   "rating": 5,
   "watched_at": "2024-01-15T10:30:00"
-}
-```
-
-**Unwatched Show Object**:
-```json
-{
-  "id": 2,
-  "title": "The Wire"
 }
 ```
 
@@ -281,16 +269,16 @@ const watchShow = async (showId, rating) => {
 
 - **User State**: Store current user info and authentication status
 - **Shows List**: Cache shows data with refresh on mutations
-- **Watch Status**: Track which shows current user has watched
+- **Watch Status**: Track global watch status for all shows
 - **Loading States**: Handle async operations with loading indicators
 - **Error States**: Display user-friendly error messages
 
 ### UI/UX Recommendations
 
 - **Login Screen**: Simple username/password form
-- **Shows List**: Display all shows with watched/unwatched indicators
-- **Show Details**: Allow editing titles and managing watch status
-- **Rating System**: 1-5 star rating when marking as watched
+- **Shows List**: Display all shows with global watched/unwatched indicators
+- **Show Details**: Allow editing titles and managing global watch status
+- **Rating System**: 1-5 star rating when marking as watched (applies to all users)
 - **Filtering**: Toggle between "All Shows", "Watched", "Unwatched"
 - **Responsive Design**: Mobile-friendly interface
 - **Real-time Updates**: Refresh data after mutations

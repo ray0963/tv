@@ -1,4 +1,4 @@
-from app.models import Show, Watch
+from app.models import Show
 from app.db import SessionLocal
 import os
 
